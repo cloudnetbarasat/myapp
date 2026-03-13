@@ -9,12 +9,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
     - name: Azure Login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Test Azure Login
-      run: az account show
+    - name: Copy files to Azure VM
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: 20.116.219.165
+        username: azureuser
+        key: ${{ secrets.VM_SSH_KEY }}
+        source: "./*"
+        target: "/var/www/html"
+
+    - name: Restart Nginx
+      uses: appleboy/ssh-action@v1
+      with:
+        host: 20.116.219.165
+        username: azureuser
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          sudo systemctl restart nginx
