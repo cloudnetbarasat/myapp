@@ -29,7 +29,7 @@ jobs:
     - name: Restart Nginx
       uses: appleboy/ssh-action@v1
       with:
-        host: 20.116.219.165
+        host: 4.206.211.217
         username: azureuser
         key: ${{ secrets.VM_SSH_KEY }}
         script: |
